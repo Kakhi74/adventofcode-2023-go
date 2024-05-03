@@ -11,12 +11,6 @@ import (
 
 type Part2 struct{}
 
-var bagContent2 = map[string]int{
-	"red":   12,
-	"green": 13,
-	"blue":  14,
-}
-
 func (d Part2) Execute() (int, error) {
 	dir, err := os.Getwd()
 	if err != nil {
@@ -36,7 +30,7 @@ func (d Part2) Execute() (int, error) {
 	var sum int
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		sum += d.possibleGameNumber(scanner.Text())
+		sum += d.powerOfFewestNumCubesToMakeGamePossible(scanner.Text())
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -47,7 +41,10 @@ func (d Part2) Execute() (int, error) {
 	return sum, nil
 }
 
-func (d Part2) possibleGameNumber(line string) int {
+func (d Part2) powerOfFewestNumCubesToMakeGamePossible(line string) int {
+	blueQty := 0
+	redQty := 0
+	greenQty := 0
 	game := strings.Split(line, ":")
 	gameSets := strings.Split(game[1], ";")
 	for _, set := range gameSets {
@@ -60,24 +57,21 @@ func (d Part2) possibleGameNumber(line string) int {
 				return 0
 			}
 			color := cube[1]
-			maxQty, ok := bagContent2[color]
-			if !ok {
-				return 0
-			}
-			if qty > maxQty {
-				return 0
+			switch color {
+			case "blue":
+				if qty > blueQty {
+					blueQty = qty
+				}
+			case "red":
+				if qty > redQty {
+					redQty = qty
+				}
+			case "green":
+				if qty > greenQty {
+					greenQty = qty
+				}
 			}
 		}
 	}
-	return d.getGameNumber(game[0])
-}
-
-func (d Part2) getGameNumber(s string) int {
-	gameNumberStr := strings.Split(s, " ")[1]
-	gameNumber, err := strconv.Atoi(gameNumberStr)
-	if err != nil {
-		fmt.Println("Error converting string to int:", err)
-		return 0
-	}
-	return gameNumber
+	return blueQty * redQty * greenQty
 }
