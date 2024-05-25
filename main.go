@@ -3,10 +3,12 @@ package main
 import (
 	"adventofcode/day1"
 	"adventofcode/day2"
+	"adventofcode/day3"
 	"fmt"
 	"os"
 	"sort"
 	"strconv"
+	"time"
 )
 
 type PartExecutor interface {
@@ -22,6 +24,7 @@ func main() {
 	executors := map[string]Day{
 		"1": {Part1: &day1.Part1{}, Part2: &day1.Part2Performant{}},
 		"2": {Part1: &day2.Part1{}, Part2: &day2.Part2{}},
+		"3": {Part1: &day3.Part1{}, Part2: &day3.Part1{}},
 	}
 
 	if len(os.Args) < 2 {
@@ -97,9 +100,12 @@ func executeDay(day Day) {
 }
 
 func executePart(part PartExecutor) {
+	start := time.Now()
 	_, err := part.Execute()
 	if err != nil {
 		fmt.Println("Error executing:", err)
 		os.Exit(1)
 	}
+	duration := time.Since(start)
+	fmt.Printf("took %s", duration)
 }

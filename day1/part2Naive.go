@@ -56,7 +56,6 @@ func (d Part2Naive) Execute() (int, error) {
 }
 
 func (d Part2Naive) extractNum(input string) int {
-	fmt.Printf("Input: %s\n", input)
 	extractedNumbers := d.wordsToNum(input)
 	if len(extractedNumbers) == 0 {
 		return 0
@@ -69,10 +68,6 @@ func (d Part2Naive) extractNum(input string) int {
 		fmt.Println("Error converting string to int ", err)
 		return 0
 	}
-
-	fmt.Printf("Extracted numbers: %s\n", extractedNumbers)
-	fmt.Printf("result: %d\n", num)
-
 	return num
 }
 
