@@ -24,7 +24,7 @@ func main() {
 	executors := map[string]Day{
 		"1": {Part1: &day1.Part1{}, Part2: &day1.Part2Performant{}},
 		"2": {Part1: &day2.Part1{}, Part2: &day2.Part2{}},
-		"3": {Part1: &day3.Part1{}, Part2: &day3.Part1{}},
+		"3": {Part1: &day3.Part1{}, Part2: &day3.Part2{}},
 	}
 
 	if len(os.Args) < 2 {

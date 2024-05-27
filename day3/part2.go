@@ -10,9 +10,9 @@ import (
 	"unicode"
 )
 
-type Part1 struct{}
+type Part2 struct{}
 
-func (d Part1) Execute() (int, error) {
+func (d Part2) Execute() (int, error) {
 	dir, err := os.Getwd()
 	if err != nil {
 		fmt.Println("Error getting current directory ", err)
@@ -43,30 +43,26 @@ func (d Part1) Execute() (int, error) {
 		fmt.Println("Error reading file ", err)
 	}
 
-	fmt.Println("3-1: ", sum)
+	fmt.Println("3-2: ", sum)
 	return sum, nil
 }
 
-func (d Part1) createRow(line string) []rune {
+func (d Part2) createRow(line string) []rune {
 	row := make([]rune, 0)
 	for _, c := range line {
-		if c == '.' {
-			row = append(row, 'D')
-		} else if d.isSpecial(c) {
+		if c == '*' {
 			row = append(row, 'S')
 		} else if unicode.IsDigit(c) {
 			row = append(row, c)
+		} else {
+			row = append(row, 'D')
 		}
 	}
 	return row
 }
 
-func (d Part1) isSpecial(r rune) bool {
-	return !unicode.IsDigit(r) && !(r == '.')
-}
-
-func (d Part1) getSum(matrix [][]rune) int {
-	sum := 0
+func (d Part2) getSum(matrix [][]rune) int {
+	numbersMap := make(map[string][]int)
 	for i := 0; i < len(matrix); i++ {
 		numberBuilder := strings.Builder{}
 		for j := 0; j < len(matrix[i]); j++ {
@@ -93,9 +89,10 @@ func (d Part1) getSum(matrix [][]rune) int {
 						number, err := strconv.Atoi(numberBuilder.String())
 						if err != nil {
 							fmt.Println("Error converting string to int: ", numberBuilder.String(), " - error: ", err)
-							number = 0
+							number = 1
 						}
-						sum += number
+						special_key := fmt.Sprintf("%d-%d", x, y)
+						numbersMap[special_key] = append(numbersMap[special_key], number)
 						foundSpecial = true
 						break
 					}
@@ -107,5 +104,18 @@ func (d Part1) getSum(matrix [][]rune) int {
 			numberBuilder.Reset()
 		}
 	}
+
+	sum := 0
+	for _, numbers := range numbersMap {
+		multiplier := 1
+		if len(numbers) < 2 {
+			continue
+		}
+		for _, number := range numbers {
+			multiplier *= number
+		}
+		sum += multiplier
+	}
+
 	return sum
 }
